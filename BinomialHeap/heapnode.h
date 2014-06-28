@@ -21,6 +21,16 @@ public:
         this->parent = parent;
         degree = 0;
     }
+
+    bool operator ==(HeapNode<T> &node2)
+    {
+        return key == node2.key;
+    }
+
+    bool operator <(HeapNode<T> &node2)
+    {
+        return key < node2.key;
+    }
 };
 
 #endif // HEAPNODE_H

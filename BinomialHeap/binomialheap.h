@@ -188,6 +188,63 @@ class BinomialHeap
         getMinimumKey();
     }
 
+    HeapNode<T>* findNode(HeapNode<T> &nodeToSearch)
+    {
+        list<HeapNode<T>* > queue;
+        HeapIterator it = headList.begin();
+
+        for(; it != headList.end(); ++it)
+        {
+            HeapNode<T> *t = *it;
+            queue.push_back(t);
+        }
+
+        while(!queue.empty())
+        {
+            HeapNode<T>* current = queue.front();
+            queue.erase(queue.begin());
+            if(*current == nodeToSearch)
+                return current;
+            else if(*current < nodeToSearch)
+            {
+                HeapIterator sons = current->sons.begin();
+                for (; sons != current->sons.end(); ++sons)
+                {
+                    HeapNode<T> *t = *sons;
+                    queue.push_back(t);
+                }
+            }
+        }
+        return NULL;
+    }
+
+    void decreaseKey(T previous, T newKey)
+    {
+        HeapNode<T> previousNode(previous);
+        HeapNode<T>* node = findNode(previousNode);
+        if(node)
+        {
+            node->key = newKey;
+            HeapNode<T>* y = node;
+            HeapNode<T>* z = node->parent;
+            while(z && y->key < z->key)
+            {
+                T tmp = y->key;
+                y->key = z->key;
+                z->key = tmp;
+                y = z;
+                z = y->parent;
+            }
+        }
+        minValue = headList.end();
+        getMinimumKey();
+    }
+
+    void deleteNode(T data, T minusInfinity)
+    {
+        decreaseKey(data, minusInfinity);
+        extractMin();
+    }
 };
 
 #endif // BINOMIALHEAP_H
