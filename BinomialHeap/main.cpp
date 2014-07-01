@@ -35,23 +35,18 @@ void printHeap (BinomialHeap<T> &heap)
 int main()
 {
     file.open("binomialHeap.txt");
-    time_t start, stop;
 
     BinomialHeap<int> heap;
 
-    for(int i = 1; i < 10; i++)
+    for(int i = 1; i < 1000; i++)
        heap.insert(i);
 
 
-    start = clock();
     cout<<"MINIMO: "<<heap.getMinimumKey()<<endl;
     heap.extractMin();
     cout<<"MINIMO luego de extraccion: "<<heap.getMinimumKey()<<endl;
-    stop = clock();
-    cout << "List iteration: " << (double)(stop-start)/CLOCKS_PER_SEC <<endl;
 
-    heap.decreaseKey(8,-4);
-    heap.deleteNode(5, -100000);
+    heap.decreaseKey(1000,4);
     cout<<"MINIMO luego de extraccion: "<<heap.getMinimumKey()<<endl;
 
     printHeap(heap);
