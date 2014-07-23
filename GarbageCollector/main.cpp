@@ -9,6 +9,8 @@
 
 using namespace std;
 
+static BinomialHeap<void *> garbageCollector;
+
 
 class Persona
 {
@@ -25,8 +27,7 @@ public:
     }
 };
 
-template<class T>
-void* crearNodo(void* address, int size, BinomialHeap<T> &garbageCollector)
+void* crearNodo(void* address, int size)
 {
     char* block = (char *)malloc(size);
     memcpy(block, address, size);
@@ -35,24 +36,23 @@ void* crearNodo(void* address, int size, BinomialHeap<T> &garbageCollector)
     return block;
 }
 
-template<class T>
-void assign(void **destiny, void **source, BinomialHeap<T> &garbageCollector)
+void assign(void ** destiny, void ** source)
 {
-    HeapNode<T>* resultDestiny = garbageCollector.findNode(*destiny);
+    HeapNode<void*>* resultDestiny = garbageCollector.findNode(destiny);
     if(resultDestiny)
     {
-        garbageCollector.decreaseKey(*destiny, resultDestiny->pointedBy - 1);
+        garbageCollector.decreaseKey(destiny, resultDestiny->pointedBy - 1);
         if(resultDestiny->pointedBy == 0)
         {
             garbageCollector.extractMin();
         }
     }
-    HeapNode<T>* resultSource = garbageCollector.findNode(*source);
+    HeapNode<void*>* resultSource = garbageCollector.findNode(source);
     if(resultSource)
     {
         garbageCollector.increaseKey(resultSource, 1);
     }
-    *destiny = *source;
+    destiny = source;
 
 }
 
@@ -69,27 +69,23 @@ void run()
     }
 }
 */
-#define size 100000
+
+
 int main()
 {
 
-    BinomialHeap <void*> garbageCollector;
-
     Persona A(1,1,"aa");
+    Persona B(2,2,"bb");
+    Persona* q = (Persona *)crearNodo(&A,sizeof(A));
+    Persona* r = (Persona *)crearNodo(&B,sizeof(B));
 
-    Persona* people [size];
-    for(int i = 0; i < size; i++)
-    {
-        people[i] = (Persona *)crearNodo(&A,sizeof(A), garbageCollector);
+    Persona* a;
 
-        //assign((void **)&people[i],(void **) &p, garbageCollector);
-    }
-
+    assign ((void **) &a,(void **) &q);
+    assign ((void **) &a,(void **) &r);
+    assign ((void **) &q,(void **) &r);
     //std::thread t (run);
     //t.join();
-    cout<<garbageCollector.getMinimumKey()<<endl;
-    cout<<"here";
+
     return 0;
 }
-
-

@@ -190,7 +190,7 @@ class BinomialHeap
             minSonsList.push_front(*sonsIt);
         }
 
-        free(currentValue->address);
+        free (currentValue->address);
         delete currentValue;
         BinomialHeap<T> minSonsHeap (minSonsList);
 
